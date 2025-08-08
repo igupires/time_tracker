@@ -11,11 +11,24 @@ class TimeEntryProvider with ChangeNotifier {
   List<TimeEntry> get entries => _entries;
 
   TimeEntryProvider(this.storage) {
-    // _loadTimeEntriesFromStorage();
+    _loadTimeEntriesFromStorage();
   }
 
   void addTimeEntry(TimeEntry entry) {
     _entries.add(entry);
+    _saveTimeEntriesToStorage();
+    notifyListeners();
+  }
+
+  void editTimeEntry(TimeEntry entry) {
+    int index = _entries.indexWhere((e) => e.id == entry.id);
+
+    if(index == -1){
+      return;
+    }
+
+    _entries[index] = entry;
+    
     _saveTimeEntriesToStorage();
     notifyListeners();
   }
@@ -30,8 +43,9 @@ class TimeEntryProvider with ChangeNotifier {
     // await storage.ready;
     var storedEntries = storage.getItem('entries');
     if (storedEntries != null) {
+      List<dynamic> decodedEntries = jsonDecode(storedEntries);
       _entries = List<TimeEntry>.from(
-        (storedEntries as List).map((item) => TimeEntry.fromJson(item)),
+        decodedEntries.map((item) => TimeEntry.fromJson(item)),
       );
       notifyListeners();
     }

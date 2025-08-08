@@ -21,7 +21,7 @@ class TimeEntry {
       projectId: json['projectId'],
       taskId: json['taskId'],
       totalTime: json['totalTime'],
-      date: json['date'],
+      date: DateTime.parse(json['date']),
       notes: json['notes']
     );
   }
@@ -36,4 +36,10 @@ class TimeEntry {
       'notes': notes
     };
   }
+
+  bool operator ==(dynamic other) =>
+      other != null && other is TimeEntry && this.id == other.id;
+
+  @override
+  int get hashCode => super.hashCode;
 }

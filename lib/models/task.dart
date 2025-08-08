@@ -20,4 +20,10 @@ class Task {
       'isDefault':isDefault,
     };
   }
+
+  bool operator ==(dynamic other) =>
+      other != null && other is Task && this.id == other.id;
+
+  @override
+  int get hashCode => super.hashCode;
 }

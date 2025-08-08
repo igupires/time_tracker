@@ -20,4 +20,10 @@ class Project {
       'isDefault':isDefault,
     };
   }
+
+  bool operator ==(dynamic other) =>
+      other != null && other is Project && this.id == other.id;
+
+  @override
+  int get hashCode => super.hashCode;
 }

@@ -6,13 +6,13 @@ import 'package:time_tracker/providers/time_entry_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/project_management_screen.dart';
 import 'screens/task_management_screen.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initLocalStorage();
 
   runApp(MyApp(localStorage: localStorage));
 }
-
 
 class MyApp extends StatelessWidget {
   final LocalStorage localStorage;
@@ -24,12 +24,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TimeEntryProvider(localStorage)),
-        ChangeNotifierProvider(create: (_) => ProjectTaskProvider(localStorage)),
+        ChangeNotifierProvider(
+          create: (_) => ProjectTaskProvider(localStorage),
+        ),
       ],
       child: MaterialApp(
         title: 'Time Tracker',
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
+        
         routes: {
           '/': (context) => HomeScreen(), // Main entry point, HomeScreen
           '/manage_projects': (context) =>

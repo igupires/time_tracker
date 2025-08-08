@@ -25,8 +25,8 @@ class ProjectTaskProvider with ChangeNotifier {
   ];
 
   ProjectTaskProvider(this.storage) {
-    // _loadProjectsFromStorage();
-    // _loadTasksFromStorage();
+    _loadProjectsFromStorage();
+    _loadTasksFromStorage();
   }
 
   List<Project> get projects => _projects;
@@ -38,14 +38,40 @@ class ProjectTaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void editProject(Project project, Project oldProject) {
+    int index = _projects.indexWhere((e) => e.id == oldProject.id);
+
+    if(index == -1){
+      return;
+    }
+
+    _projects[index] = project;
+
+    _saveProjectsToStorage();
+    notifyListeners();
+  }
+
   void deleteProject(String id) {
     _projects.removeWhere((project) => project.id == id);
     _saveProjectsToStorage();
     notifyListeners();
   }
 
-  void addTask(Project project) {
-    _projects.add(project);
+  void addTask(Task project) {
+    _tasks.add(project);
+    _saveTasksToStorage();
+    notifyListeners();
+  }
+
+  void editTask(Task task, Task oldTask) {
+    int index = _tasks.indexWhere((e) => e.id == oldTask.id);
+
+    if(index == -1){
+      return;
+    }
+
+    _tasks[index] = task;
+
     _saveTasksToStorage();
     notifyListeners();
   }
@@ -60,8 +86,9 @@ class ProjectTaskProvider with ChangeNotifier {
     // await storage.ready;
     var storedProjects = storage.getItem('projects');
     if (storedProjects != null) {
+      List<dynamic> decodedProjects = jsonDecode(storedProjects);
       _projects = List<Project>.from(
-        (storedProjects as List).map((item) => Project.fromJson(item)),
+        decodedProjects.map((item) => Project.fromJson(item)),
       );
       notifyListeners();
     }
@@ -70,8 +97,9 @@ class ProjectTaskProvider with ChangeNotifier {
   void _loadTasksFromStorage() async {
     var storedTasks = storage.getItem('tasks');
     if (storedTasks != null) {
+      List<dynamic> decodedTasks = jsonDecode(storedTasks);
       _tasks = List<Task>.from(
-        (storedTasks as List).map((item) => Task.fromJson(item)),
+        decodedTasks.map((item) => Task.fromJson(item)),
       );
       notifyListeners();
     }
