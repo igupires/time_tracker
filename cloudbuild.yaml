@@ -10,7 +10,7 @@ steps:
       - '-c'
       - |
         flutter pub get
-      dir: 'cloud-builders-flutter/flutter' # Define o diretório de trabalho
+    dir: 'cloud-builders-flutter/flutter' # Define o diretório de trabalho
 
   # 3. Executa os testes (opcional, mas recomendado)
   - name: 'gcr.io/cloud-builders/flutter'
@@ -19,7 +19,7 @@ steps:
       - '-c'
       - |
         flutter test
-      dir: 'cloud-builders-flutter/flutter'
+    dir: 'cloud-builders-flutter/flutter'
 
   # 4. Constrói o aplicativo Android (APK)
   - name: 'gcr.io/cloud-builders/flutter'
@@ -28,7 +28,7 @@ steps:
       - '-c'
       - |
         flutter build apk --release
-      dir: 'cloud-builders-flutter/flutter'
+    dir: 'cloud-builders-flutter/flutter'
 
   # 5. Distribui o APK para o Firebase App Distribution
   - name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli'
