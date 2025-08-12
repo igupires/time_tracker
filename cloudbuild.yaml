@@ -41,3 +41,5 @@ steps:
           --app-id "$_FIREBASE_APP_ID" \
           --release-notes "Build automático via Cloud Build" \
           --testers-file "testers.txt"
+options:
+  logging: CLOUD_LOGGING_ONLY
