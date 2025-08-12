@@ -1,86 +1,43 @@
 steps:
   # 1. Clona a comunidade de builders do Flutter para usar o SDK
-    - name: 'gcr.io/cloud-builders/git'
-        args: ['clone', 'https://github.com/GoogleCloudPlatform/cloud-builders-flutter.git']
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', 'https://github.com/GoogleCloudPlatform/cloud-builders-flutter.git']
 
-          # 2. Instala as dependências do projeto Flutter
-            - name: 'gcr.io/cloud-builders/flutter'
-                entrypoint: 'bash'
-                    args:dir: 'cloud-builders-flutter/flutter' # Define o diretório de trabalho
+  # 2. Instala as dependências do projeto Flutter
+  - name: 'gcr.io/cloud-builders/flutter'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        flutter pub get
+      dir: 'cloud-builders-flutter/flutter' # Define o diretório de trabalho
 
-                          - '-c'
-                                - |
-                                        flutter pub get
-                                            dir: 'cloud-builders-flutter/flutter' # Define o diretório de trabalho
+  # 3. Executa os testes (opcional, mas recomendado)
+  - name: 'gcr.io/cloud-builders/flutter'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        flutter test
+      dir: 'cloud-builders-flutter/flutter'
 
-                                              # 3. Executa os testes (opcional, mas recomendado)
-                                                - name: 'gcr.io/cloud-builders/flutter'
-                                                    entrypoint: 'bash'
-                                                        args:
-                                                              - '-c'
-                                                                    - |II
-                                                                            flutter test
-                                                                                dir: 'cloud-builders-flutter/flutter'
+  # 4. Constrói o aplicativo Android (APK)
+  - name: 'gcr.io/cloud-builders/flutter'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        flutter build apk --release
+      dir: 'cloud-builders-flutter/flutter'
 
-                                                                                  # 4. Constrói o aplicativo Android (APK)
-                                                                                    - name: 'gcr.io/cloud-builders/flutter'
-                                                                                        entrypoint: 'bash'
-                                                                                            args:
-                                                                                                  - '-c'
-                                                                                                        - |
-                                                                                                                flutter build apk --release
-                                                                                                                    dir: 'cloud-builders-flutter/flutter'
-
-                                                                                                                      # 5. Distribui o APK para o Firebase App Distribution
-                                                                                                                        - name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli'
-                                                                                                                            entrypoint: 'bash'
-                                                                                                                                args:
-                                                                                                                                      - '-c'
-                                                                                                                                            - |
-                                                                                                                                                    gcloud app-distribute \
-                                                                                                                                                              "cloud-builders-flutter/flutter/build/app/outputs/flutter-apk/app-release.apk" \
-                                                                                                                                                                        --app-id "$_FIREBASE_APP_ID" \
-                                                                                                                                                                                  --release-notes "Build automático via Cloud Build" \
-                                                                                                                                                                                            --testers-file "testers.txt"steps:
-                                                                                                                                                                                              # 1. Clona a comunidade de builders do Flutter para usar o SDK
-                                                                                                                                                                                                - name: 'gcr.io/cloud-builders/git'
-                                                                                                                                                                                                    args: ['clone', 'https://github.com/GoogleCloudPlatform/cloud-builders-flutter.git']
-
-                                                                                                                                                                                                      # 2. Instala as dependências do projeto Flutter
-                                                                                                                                                                                                        - name: 'gcr.io/cloud-builders/flutter'
-                                                                                                                                                                                                            entrypoint: 'bash'
-                                                                                                                                                                                                                args:
-                                                                                                                                                                                                                      - '-c'
-                                                                                                                                                                                                                            - |
-                                                                                                                                                                                                                                    flutter pub get
-                                                                                                                                                                                                                                        dir: 'cloud-builders-flutter/flutter' # Define o diretório de trabalho
-
-                                                                                                                                                                                                                                          # 3. Executa os testes (opcional, mas recomendado)
-                                                                                                                                                                                                                                            - name: 'gcr.io/cloud-builders/flutter'
-                                                                                                                                                                                                                                                entrypoint: 'bash'
-                                                                                                                                                                                                                                                    args:
-                                                                                                                                                                                                                                                          - '-c'
-                                                                                                                                                                                                                                                                - |
-                                                                                                                                                                                                                                                                        flutter test
-                                                                                                                                                                                                                                                                            dir: 'cloud-builders-flutter/flutter'
-
-                                                                                                                                                                                                                                                                              # 4. Constrói o aplicativo Android (APK)
-                                                                                                                                                                                                                                                                                - name: 'gcr.io/cloud-builders/flutter'
-                                                                                                                                                                                                                                                                                    entrypoint: 'bash'
-                                                                                                                                                                                                                                                                                        args:
-                                                                                                                                                                                                                                                                                              - '-c'
-                                                                                                                                                                                                                                                                                                    - |
-                                                                                                                                                                                                                                                                                                            flutter build apk --release
-                                                                                                                                                                                                                                                                                                                dir: 'cloud-builders-flutter/flutter'
-
-                                                                                                                                                                                                                                                                                                                  # 5. Distribui o APK para o Firebase App Distribution
-                                                                                                                                                                                                                                                                                                                    - name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli'
-                                                                                                                                                                                                                                                                                                                        entrypoint: 'bash'
-                                                                                                                                                                                                                                                                                                                            args:
-                                                                                                                                                                                                                                                                                                                                  - '-c'
-                                                                                                                                                                                                                                                                                                                                        - |
-                                                                                                                                                                                                                                                                                                                                                gcloud app-distribute \
-                                                                                                                                                                                                                                                                                                                                                          "cloud-builders-flutter/flutter/build/app/outputs/flutter-apk/app-release.apk" \
-                                                                                                                                                                                                                                                                                                                                                                    --app-id "$_FIREBASE_APP_ID" \
-                                                                                                                                                                                                                                                                                                                                                                              --release-notes "Build automático via Cloud Build" \
-                                                                                                                                                                                                                                                                                                                                                                                        --testers-file "testers.txt"
+  # 5. Distribui o APK para o Firebase App Distribution
+  - name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud app-distribute \
+          "cloud-builders-flutter/flutter/build/app/outputs/flutter-apk/app-release.apk" \
+          --app-id "$_FIREBASE_APP_ID" \
+          --release-notes "Build automático via Cloud Build" \
+          --testers-file "testers.txt"
